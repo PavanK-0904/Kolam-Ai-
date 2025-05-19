@@ -142,7 +142,7 @@ Item: <item/service requested if any> (or 'none' if not applicable)
         chat_history.append(f"Kolamai: {reply}")
         memory_log.append(f"Kolamai replied: {reply}, Intent: {intent}, Item: {item}")
 
-        # Take actions based on intent
+    
         if intent == "service_request" and item != "none":
             action_result = send_whatsapp_message(f"Guest has requested: {item}. Please arrange it.")
             reply += f" ({action_result})"
