@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Kolamai Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f4f6f8; /* Very light, professional background */
+        }
+
+        .chatbot-page-container {
+            display: flex;
+            width: 90%;
+            max-width: 960px;
+            height: 85%; /* Slightly taller */
+            max-height: 750px;
+            border-radius: 16px; /* Slightly less rounded */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15); /* More pronounced shadow */
+            overflow: hidden;
+            background-color: #fff;
+            border: 1px solid #e0e0e0; /* Subtle border */
+        }
+
+        .chatbot-side-panel {
+            width: 30%; /* Slightly wider side panel */
+            background-color: #f9fafd; /* Very light, clean sidebar */
+            padding: 30px; /* More padding */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .chatbot-logo-text {
+            font-size: 52px; /* Slightly larger logo text */
+            font-weight: 700; /* More emphasis */
+            margin-bottom: 8px;
+            line-height: 1;
+            letter-spacing: -1px; /* Adjust letter spacing */
+        }
+
+        .chatbot-logo-text span:nth-child(1) { color: #e63946; } /* More vibrant red */
+        .chatbot-logo-text span:nth-child(2) { color: #2a9d8f; } /* Teal */
+        .chatbot-logo-text span:nth-child(3) { color: #f4a261; } /* Burnt Orange */
+        .chatbot-logo-text span:nth-child(4) { color: #457b9d; } /* Deeper Blue */
+        .chatbot-logo-text span:nth-child(5) { color: #1d3557; } /* Darker Navy */
+
+        .chatbot-logo-subtext {
+            font-size: 18px; /* Slightly larger subtext */
+            font-weight: 600; /* Semi-bold */
+            color: #495057; /* Dark grey */
+            text-align: center;
+            margin-bottom: 30px; /* More spacing */
+            letter-spacing: 0.05em;
+        }
+
+        .chatbot-brand-name {
+            color: #e63946; /* Consistent primary color */
+            font-size: 26px; /* Slightly larger brand name */
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chatbot-info {
+            font-size: 15px; /* Slightly larger info text */
+            color: #6c757d; /* Medium grey */
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .chatbot-info p {
+            margin-bottom: 12px;
+        }
+
+        .chatbot-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-header {
+            background-color: #fff;
+            color: #e63946; /* Consistent primary color */
+            padding: 20px; /* More padding */
+            font-size: 22px; /* Slightly larger header */
+            font-weight: 600;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left; /* Align header text to the left */
+            padding-left: 30px; /* Add some left padding */
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 25px; /* More padding */
+            background-color: #fff;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message {
+            max-width: 85%; /* Slightly wider messages */
+            padding: 14px 18px; /* More padding inside messages */
+            margin-bottom: 15px; /* More spacing between messages */
+            font-size: 16px; /* Slightly larger message text */
+            line-height: 1.6;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Subtle shadow on messages */
+        }
+
+        .chat-message.bot {
+            background-color: #f0f2f5; /* Lighter background for bot messages */
+            color: #343a40; /* Darker text for bot messages */
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .chat-message.user {
+            background-color: #e63946;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px 25px; /* More padding */
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 24px; /* More rounded input */
+            border: 1px solid #ced4da; /* Light grey border for input */
+            outline: none;
+            background-color: #f8f9fa; /* Very light background for input */
+            font-size: 16px;
+            color: #495057;
+        }
+
+        .chat-input input:focus {
+            border-color: #e63946; /* Highlight on focus */
+            box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.25); /* Focus shadow */
+        }
+
+        .chat-input button {
+            margin-left: 15px;
+            padding: 14px 24px;
+            background-color: #e63946;
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 24px; /* More rounded button */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out; /* Smooth hover transition */
+        }
+
+        .chat-input button:hover {
+            background-color: #c23844; /* Darker on hover */
+        }
+
+        .error-message {
+            background-color: #ffebee; /* Light red background for error */
+            color: #d32f2f; /* Darker red for error text */
+            padding: 12px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            body {
+                background: #f0f2f5;
+            }
+            .chatbot-page-container {
+                flex-direction: column;
+                width: 95%;
+                height: auto;
+                border-radius: 12px;
+            }
+            .chatbot-side-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                padding: 20px;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .chatbot-logo-text {
+                font-size: 40px;
+                margin-bottom: 5px;
+            }
+            .chatbot-logo-subtext {
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+            .chatbot-brand-name {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            .chatbot-info {
+                display: block; /* Show info on smaller screens (adjust as needed) */
+                font-size: 14px;
+            }
+            .chatbot-container {
+                flex: 1;
+            }
+            .chatbot-header {
+                font-size: 18px;
+                padding: 15px;
+                text-align: center; /* Center header on mobile */
+                padding-left: 15px; /* Reset left padding */
+            }
+            .chat-messages {
+                padding: 15px;
+                font-size: 15px;
+            }
+            .chat-message {
+                padding: 12px 16px;
+                font-size: 15px;
+                margin-bottom: 12px;
+            }
+            .chat-input {
+                padding: 10px 15px;
+            }
+            .chat-input input {
+                font-size: 15px;
+                padding: 12px 16px;
+                border-radius: 20px;
+            }
+            .chat-input button {
+                font-size: 15px;
+                padding: 12px 20px;
+                border-radius: 20px;
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chatbot-page-container">
+        <div class="chatbot-side-panel">
+            <div class="chatbot-logo-text">
+                <span>K</span><span>O</span><span>L</span><span>A</span><span>M</span>
+            </div>
+            <div class="chatbot-logo-subtext">APARTMENTS</div>
+            <div class="chatbot-brand-name">Kolam AI</div>
+            <div class="chatbot-info">
+                <p>Your friendly assistant for Kolam Serviced Apartments in Chennai.</p>
+                <p>We're here to help you with your queries 24/7.</p>
+            </div>
+        </div>
+        <div class="chatbot-container">
+            <div class="chatbot-header">Chat with Kolamai</div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message bot">{{ initial_response }}</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your message..." />
+                <button onclick="sendMessage()">Send</button>
+            </div>
+            <div id="errorMessage" class="error-message" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById("chatMessages");
+        const userInput = document.getElementById("userInput");
+        const errorMessageDiv = document.getElementById("errorMessage");
+        let foodPreferenceStage = 0;
+        let foodType = "";
+
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === "") return;
+
+            const userMsgDiv = document.createElement("div");
+            userMsgDiv.className = "chat-message user";
+            userMsgDiv.innerText = message;
+            chatMessages.appendChild(userMsgDiv);
+
+            userInput.value = "";
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            errorMessageDiv.style.display = "none";
+
+            handleUserMessage(message);
+        }
+
+        function handleUserMessage(message) {
+            if (foodPreferenceStage === 0 && message.toLowerCase().includes("hungry")) {
+                foodPreferenceStage = 1;
+                addBotMessage("Great! Are you in the mood for Vegetarian or Non-Vegetarian?");
+            } else if (foodPreferenceStage === 1) {
+                if (message.toLowerCase().includes("veg")) {
+                    foodPreferenceStage = 2;
+                    foodType = "Vegetarian";
+                    addBotMessage("Okay, Vegetarian it is! Please choose a cuisine: South Indian, North Indian, Continental, Mexican, American, Chinese.");
+                } else if (message.toLowerCase().includes("non-veg")) {
+                    foodPreferenceStage = 2;
+                    foodType = "Non-Vegetarian";
+                    addBotMessage("Got it, Non-Vegetarian it is! Please choose a cuisine: South Indian, North Indian, Continental, Mexican, American, Chinese.");
+                } else {
+                    addBotMessage("Sorry, could you please specify 'Vegetarian' or 'Non-Vegetarian'?");
+                }
+            } else if (foodPreferenceStage === 2) {
+                const cuisine = message.trim().toLowerCase();
+                const validCuisines = ["south indian", "north indian", "continental", "mexican", "american", "chinese"];
+                if (validCuisines.includes(cuisine)) {
+                    foodPreferenceStage = 0; // Reset the state
+                    let swiggyLink = `https://www.swiggy.com/restaurants/search?city=chennai&query=${encodeURIComponent(foodType)} ${encodeURIComponent(cuisine)}`;
+                    let suggestions = "";
+
+                    switch (cuisine) {
+                        case "south indian":
+                            suggestions = "You might enjoy some Dosa, Idli, Vada, or Sambar Rice!";
+                            break;
+                        case "north indian":
+                            suggestions = "How about Butter Chicken, Paneer Butter Masala, Naan, or Biryani?";
+                            break;
+                        case "continental":
+                            suggestions = "Consider Pasta, Pizza, Steak, or a Salad!";
+                            break;
+                        case "mexican":
+                            suggestions = "Tacos, Burritos, Quesadillas, or Enchiladas could be a good choice!";
+                            break;
+                        case "american":
+                            suggestions = "Burgers, Fries, Pizza, or a Sandwich might hit the spot!";
+                            break;
+                        case "chinese":
+                            suggestions = "Perhaps some Noodles, Fried Rice, Manchurian, or Dim Sum?";
+                            break;
+                        default:
+                            suggestions = "Enjoy browsing!";
+                            break;
+                    }
+
+                    addBotMessage(`Here are some restaurants on Swiggy offering ${foodType} ${cuisine} in Chennai: <a href="${swiggyLink}" target="_blank">View on Swiggy</a><br>${suggestions}`);
+                } else {
+                    addBotMessage(`Please choose a cuisine from the following options: South Indian, North Indian, Continental, Mexican, American, Chinese.`);
+                }
+            } else {
+                // Default behavior for other messages
+                fetch("/send_message", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: `message=${encodeURIComponent(message)}`,
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    const botResponse = data.response;
+                    addBotMessage(botResponse);
+                })
+                .catch((error) => {
+                    console.error("Error sending message:", error);
+                    errorMessageDiv.innerText = "Sorry, there was an error communicating with the bot.";
+                    errorMessageDiv.style.display = "block";
+                    addBotMessage("Sorry, there was an error processing your request.");
+                });
+            }
+        }
+
+        function addBotMessage(message) {
+            const botMsgDiv = document.createElement("div");
+            botMsgDiv.className = "chat-message bot";
+            botMsgDiv.innerHTML = message; // Use innerHTML to render HTML content
+            chatMessages.appendChild(botMsgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        userInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        // Initial bot response (you might want to fetch this dynamically as well)
+        const initialResponse = "Hello! How can I assist you today?";
+        document.querySelector(".chat-message.bot").innerText = initialResponse;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    </script>
+
+</body>
+</html>
